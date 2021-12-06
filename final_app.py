@@ -105,15 +105,16 @@ df3
 st.markdown("For a fun visualization of how standardscaler works, the max cells are highlighted in a vibrant violet color, and the min in a light green. This modified dataset was created in reference to [this article](https://pandas.pydata.org/pandas-docs/stable/user_guide/style.html#Styler-Functions). Notice that these values are very similar throughout the columns. This is because standardscaler removes the mean and scales to unit variance (variance of 1).")
 
 
-s2 = df3.style
+
 def highlight_max(s, props=''):
     return np.where(s == np.nanmax(s.values), props, '')
-s2.apply(highlight_max, props='color:white;background-color:violet', axis=0)
+    
+df3.style.apply(highlight_max, props='color:white;background-color:violet', axis=0)
 
 def highlight_min(s, props=''):
     return np.where(s == np.nanmin(s.values), props, '')
-s2.apply(highlight_min, props='color:white;background-color:lightgreen', axis=0)
-s2
+df3.style.apply(highlight_min, props='color:white;background-color:lightgreen', axis=0)
+df3
 
 st.subheader("KMeans")
 
