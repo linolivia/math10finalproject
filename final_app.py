@@ -144,7 +144,7 @@ brandsum = df2[f"is_{yourbrand}"].sum(axis = 0)
 
 st.write(f"{brandsum} {yourbrand} cars are in this dataset.")
 
-st.write("Please refer to the [source code](https://github.com/linolivia/math10finalproject) to examine my work with keras.")
+st.write("Please refer to the [source code](https://github.com/linolivia/math10finalproject/blob/main/final_app.py) to examine my work with keras.")
 #the success of the following machine learning exercise has been depending solely on its performance on Google Colab. I have been working on this project on an M1 macbook, and so downloading Tensorflow has so far been unsuccessful.
 
 #X_train = df[numeric_cols]
