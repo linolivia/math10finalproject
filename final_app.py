@@ -34,7 +34,10 @@ df.shape
 st.write("As you can see, there are some elements in this dataset that say <NA>. At first, I had assumed that the NaN values were similar to our Spotify dataset. However, with closer inspection with my errors, I noticed that our NaN values were filled with question marks (?) instead.")
 
 df = df[df.notna().all(axis = 1)]
-df
+
+myexpander = st.expander("click to see our cleaned data")
+if myexpander:
+    df
 st.write(df.shape)
 
 st.caption("To better clean my data, I removed any rows with at least one NaN value.")
