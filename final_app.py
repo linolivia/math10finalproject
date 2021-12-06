@@ -15,6 +15,7 @@ from pandas.api.types import is_numeric_dtype
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 
+
 st.set_page_config(layout="wide")
 
 st.title("Welcome to my Final Project! :car:")
@@ -108,14 +109,12 @@ s2 = df3.style
 def highlight_max(s, props=''):
     return np.where(s == np.nanmax(s.values), props, '')
     
-(s2.apply(highlight_max, props='color:white;background-color:violet', axis=0))
+s2.apply(highlight_max, props='color:white;background-color:violet', axis=0)
 
 def highlight_min(s, props=''):
     return np.where(s == np.nanmin(s.values), props, '')
 s2.apply(highlight_min, props='color:white;background-color:lightgreen', axis=0)
-
 s2
-
 
 st.subheader("KMeans")
 
