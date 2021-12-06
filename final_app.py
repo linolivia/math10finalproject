@@ -131,7 +131,7 @@ st.write("Here I will answer my last question, if it's possible to determine wha
 
 st.write("to create this dropdown box of car brands while avoiding repeated car brand names, I referenced [this article](https://www.geeksforgeeks.org/python-removing-duplicates-from-tuple/#:~:text=Method%20%231%20%3A%20Using%20set(),back%20again%20using%20tuple()%20.).")
 
-df["car name"] = df["car name"].map(lambda s: eval(s))
+df["car name"] = df["car name"].astype('str').str.split(" ")
 brands = tuple(set(tuple([df.loc[:,"car name"][x][0] for x in df.index])))
 
 yourbrand = st.selectbox("What car brand would you like to test?", brands)
