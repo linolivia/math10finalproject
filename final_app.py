@@ -114,7 +114,7 @@ s2.apply(highlight_max, props='color:white;background-color:violet', axis=0)
 def highlight_min(s, props=''):
     return np.where(s == np.nanmin(s.values), props, '')
 s2.apply(highlight_min, props='color:white;background-color:lightgreen', axis=0)
-s2
+
 
 st.subheader("KMeans")
 
