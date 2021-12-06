@@ -115,7 +115,7 @@ def highlight_min(s, props=''):
     return np.where(s == np.nanmin(s.values), props, '')
 s2.apply(highlight_min, props='color:white;background-color:lightgreen', axis=0)
 
-st.dataframe(s2)
+s2
 
 
 st.subheader("KMeans")
