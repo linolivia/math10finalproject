@@ -14,7 +14,7 @@ import altair as alt
 from pandas.api.types import is_numeric_dtype
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
-#from tensorflow import keras
+
 
 st.set_page_config(layout="wide")
 
@@ -31,11 +31,16 @@ numeric_cols = [c for c in df.columns if is_numeric_dtype(df[c])]
 df
 df.shape
 
+
 st.write("As you can see, there are some elements in this dataset that say <NA>. At first, I had assumed that the NaN values were similar to our Spotify dataset. However, with closer inspection with my errors, I noticed that our NaN values were filled with question marks (?) instead.")
 
 df = df[df.notna().all(axis = 1)]
-df
+df.style
+
+
 st.write(df.shape)
+
+df4 = df.copy()
 
 st.caption("To better clean my data, I removed any rows with at least one NaN value.")
 
@@ -44,7 +49,7 @@ st.header("A basic plot of our data... by you!")
 
 st.write("To begin visualizing our data, you will be able to select your own x and y axes from our given columns, to see if there are any associations.")
 
-yourxaxis = st.selectbox("Choose your x-axis", numeric_cols )
+yourxaxis = st.selectbox("Choose your x-axis", numeric_cols)
 youryaxis = st.selectbox("Choose your y-axis", numeric_cols)
 
 st.write("Take a look at your graph!")
@@ -97,6 +102,21 @@ scaler.fit(df2)
 df3 = pd.DataFrame(scaler.transform(df2), columns = df2.columns)
 df3
 
+st.markdown("For a fun visualization of how standardscaler works, the max cells are highlighted in a vibrant violet color, and the min in a light green. This modified dataset was created in reference to [this article](https://pandas.pydata.org/pandas-docs/stable/user_guide/style.html#Styler-Functions). Notice that these values are very similar throughout the columns. This is because standardscaler removes the mean and scales to unit variance (variance of 1).")
+
+
+s2 = df3.style
+def highlight_max(s, props=''):
+    return np.where(s == np.nanmax(s.values), props, '')
+s2.apply(highlight_max, props='color:white;background-color:violet', axis=0)
+
+def highlight_min(s, props=''):
+    return np.where(s == np.nanmin(s.values), props, '')
+s2.apply(highlight_min, props='color:white;background-color:lightgreen', axis=0)
+s2
+
+st.subheader("KMeans")
+
 st.write("Now, we are able to cluster our data using KMeans. You are free to choose as many (or as little) clusters you would like, and notice possible overfitting that arises from the number of clusters that are chosen. The cluster number will be shown on the far right of our new dataframe.")
 
 yourcluster = st.slider("How many clusters would you like?", min_value = 1, max_value = 392, value = 1)
@@ -118,6 +138,8 @@ stchart = alt.Chart(df).mark_circle().encode(
     y = youryaxis2,
     tooltip = "car name",
     color = "cluster:N"
+).add_selection(
+    scales
 )
 stchart
 
@@ -125,53 +147,40 @@ st.write("Note that as the numbers of clusters increase, the more our graph is o
 
 st.write("It appears that there is __no__ evident relationship within these clusters.")
 
-st.header("Keras and Car Brands")
+st.subheader("KNearestNeighbors")
 
-st.write("Here I will answer my last question, if it's possible to determine what car brand a vehicle is based on its attributes. To do so, I will need to find a way to extract the car brand name from the `car name` column.")
+st.write("Although it appears that there isn't a very strong relationship within clusters, we can still use supervised learning and KNearestNeighbors to predict car brands.")
 
-st.write("to create this dropdown box of car brands while avoiding repeated car brand names, I referenced [this article](https://www.geeksforgeeks.org/python-removing-duplicates-from-tuple/#:~:text=Method%20%231%20%3A%20Using%20set(),back%20again%20using%20tuple()%20.).")
+yourneighbors = st.slider("choose the number of neighbors",1,50)
 
-df["car name"] = df["car name"].astype('str').str.split(" ")
-brands = tuple(set(tuple([df.loc[:,"car name"][x][0] for x in df.index])))
+from sklearn.neighbors import KNeighborsClassifier
+clf = KNeighborsClassifier(n_neighbors = yourneighbors)
+X = df2[numeric_cols]
+y = df["car name"]
+clf.fit(X,y)
 
-yourbrand = st.selectbox("What car brand would you like to test?", brands)
+df4["our prediction"] = clf.predict(X)
+df4
 
-df2 = df.copy()
+st.markdown("to visualize its predictions, feel free to explore this chart:")
 
-df2[f"is_{yourbrand}"] = df2.loc[:,"car name"].map(lambda is_brand: yourbrand in is_brand)
-df2
-brandsum = df2[f"is_{yourbrand}"].sum(axis = 0)
+yourxaxis3 = st.selectbox("Select your x-axis", numeric_cols )
+youryaxis3 = st.selectbox("Select your y-axis", numeric_cols)
 
-st.write(f"{brandsum} {yourbrand} cars are in this dataset.")
 
-st.write("Please refer to the [source code](https://github.com/linolivia/math10finalproject/blob/main/final_app.py) to examine my work with keras.")
-#the success of the following machine learning exercise has been depending solely on its performance on Google Colab. I have been working on this project on an M1 macbook, and so downloading Tensorflow has so far been unsuccessful.
+chart3 = alt.Chart(df4).mark_circle().encode(
+    x = alt.X(yourxaxis3,scale=alt.Scale(zero=False)),
+    y = alt.Y(youryaxis3,scale=alt.Scale(zero=False)),
+    tooltip = ["car name", "our prediction"],
+    color= alt.Color("our prediction",scale = alt.Scale(scheme ='paired'))
+).add_selection(
+    scales
+)
 
-#X_train = df[numeric_cols]
-#X_train = np.asarray(X_train).astype(np.float32)
+chart3
 
-#y_train = df[f"is_{yourbrand}"]
-#y_train = np.asarray(y_train).astype(np.float32)
 
-#model = keras.Sequential(
-    #[
-#        keras.layers.InputLayer(input_shape = (9,)), # shape is 9 because there are nine numeric columns in my dataset.
-        #keras.layers.Flatten(),
-#        keras.layers.Dense(16, activation="sigmoid"),
-#        keras.layers.Dense(16, activation="sigmoid"),
-#        keras.layers.Dense(1,activation="sigmoid") #output is 1 because its decisions are binary; either the car is your selected car brand, or it is not.
-#    ]
-#)
-#
-#model.compile(
-#    loss="binary_crossentropy",
-#    optimizer=keras.optimizers.SGD(learning_rate=0.01),
-#    metrics=["accuracy"],
-#)
-#
-#history = model.fit(X_train,y_train,epochs=100) #100 iterations
-
-st.write("As you can see, the accuracy is consistently above 85% for whichever car brand is selected. This is not necessarily a good thing; however. These algorithms are prone to overfitting because it's possible the algorithm is simply memorizing all of the data. So, take these conclusions with a grain of salt. Because of this limitation that we are aware of, I would conclude that it is __not__ possible to determine the car brand from its attributes.  ")
+st.write("Much like KMeans, KNearestNeighbors is prone to overfitting. Notice that as the number of neighbors increases, the more inaccurate our model becomes. Also, by hovering over certain points, it's clear that very little car brands match between its actual brand and its predicted brand. This shows that it is __not__ possible to determine car brand by its attributes.")
 
 clicked = st.button("Thanks for reading! Here's a fun treat :-)")
 
