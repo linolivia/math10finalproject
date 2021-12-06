@@ -15,7 +15,7 @@ from pandas.api.types import is_numeric_dtype
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 
-
+st.write(st.__version__)
 st.set_page_config(layout="wide")
 
 st.title("Welcome to my Final Project! :car:")
