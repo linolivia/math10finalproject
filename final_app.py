@@ -171,7 +171,7 @@ st.write("Please refer to the [source code](https://github.com/linolivia/math10f
 #
 #history = model.fit(X_train,y_train,epochs=100) #100 iterations
 
-st.write("As you can see, the accuracy hovers at around 85% for whichever car brand is selected. This is not necessarily a good thing; however. These algorithms are prone to overfitting because it's possible the algorithm is simply memorizing all of the data. So, take these conclusions with a grain of salt. Because of this limitation that we are aware of, I would conclude that it is __not__ possible to determine the car brand from its attributes.  ")
+st.write("As you can see, the accuracy is consistently above 85% for whichever car brand is selected. This is not necessarily a good thing; however. These algorithms are prone to overfitting because it's possible the algorithm is simply memorizing all of the data. So, take these conclusions with a grain of salt. Because of this limitation that we are aware of, I would conclude that it is __not__ possible to determine the car brand from its attributes.  ")
 
 clicked = st.button("Thanks for reading! Here's a fun treat :-)")
 
