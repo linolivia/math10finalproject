@@ -35,7 +35,7 @@ df.shape
 st.write("As you can see, there are some elements in this dataset that say <NA>. At first, I had assumed that the NaN values were similar to our Spotify dataset. However, with closer inspection with my errors, I noticed that our NaN values were filled with question marks (?) instead.")
 
 df = df[df.notna().all(axis = 1)]
-df.style
+df
 
 
 st.write(df.shape)
