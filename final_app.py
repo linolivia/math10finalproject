@@ -26,7 +26,7 @@ st.write("After a _lot_ of searching, I stumbled upon an amazing [dataset](https
 
 st.write("Looking at this dataset, I have a few questions I would like to answer. First is, is there a relationship betwen a car's power and efficiency? This 'power' will be measured two ways. My next question is, can car brands be classified through their attributes?")
 
-df = pd.read_csv("/Users/math10/Downloads/auto-mpg.csv", na_values = "?")
+df = pd.read_csv("auto-mpg.csv", na_values = "?")
 numeric_cols = [c for c in df.columns if is_numeric_dtype(df[c])]
 df
 df.shape
